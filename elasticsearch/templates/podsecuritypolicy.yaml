@@ -9,6 +9,10 @@ metadata:
     release: {{ .Release.Name | quote }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     app: {{ $fullName | quote }}
+{{- if .Values.annotations }}
+  annotations:
+    {{ toYaml .Values.annotations | nindent 4 }}
+{{- end }}
 spec:
 {{ toYaml .Values.podSecurityPolicy.spec | indent 2 }}
 {{- end -}}

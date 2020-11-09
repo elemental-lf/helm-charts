@@ -10,9 +10,14 @@ metadata:
     app: {{ .Chart.Name }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-{{- with .Values.ingress.annotations }}
+{{- if (or .Values.annotations .Values.ingress.annotations) }}
   annotations:
-{{ toYaml . | indent 4 }}
+  {{- if .Values.annotations }}
+    {{ toYaml .Values.annotations | nindent 4 }}
+  {{- end }}
+  {{- if .Values.ingress.annotations }}
+    {{ toYaml .Values.ingress.annotations | nindent 4 }}
+  {{- end }}
 {{- end }}
 spec:
 {{- if .Values.ingress.tls }}

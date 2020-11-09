@@ -13,6 +13,9 @@ metadata:
     {{- end }}
   annotations:
     esMajorVersion: "{{ include "esMajorVersion" . }}"
+{{- if .Values.annotations }}
+    {{ toYaml .Values.annotations | nindent 4 }}
+{{- end }}
 spec:
   serviceName: {{ template "uname" . }}-headless
   selector:
@@ -26,10 +29,15 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: {{ template "uname" . }}
-    {{- with .Values.persistence.annotations  }}
+{{- if (or .Values.annotations .Values.persistence.annotations) }}
       annotations:
-{{ toYaml . | indent 8 }}
-    {{- end }}
+  {{- if .Values.annotations }}
+        {{ toYaml .Values.annotations | nindent 8 }}
+  {{- end }}
+  {{- if .Values.ingress.annotations }}
+        {{ toYaml .Values.persistence.annotations | nindent 8 }}
+  {{- end }}
+{{- end }}
     spec:
 {{ toYaml .Values.volumeClaimTemplate | indent 6 }}
   {{- end }}

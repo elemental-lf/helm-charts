@@ -8,6 +8,10 @@ metadata:
     release: {{ .Release.Name | quote }}
     chart: "{{ .Chart.Name }}"
     app: "{{ template "uname" . }}"
+{{- if .Values.annotations }}
+  annotations:
+    {{ toYaml .Values.annotations | nindent 4 }}
+{{- end }}
 data:
 {{- range $path, $config := .Values.esConfig }}
   {{ $path }}: |

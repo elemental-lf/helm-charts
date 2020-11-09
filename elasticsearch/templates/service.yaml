@@ -8,8 +8,15 @@ metadata:
     release: {{ .Release.Name | quote }}
     chart: "{{ .Chart.Name }}"
     app: "{{ template "uname" . }}"
+{{- if (or .Values.annotations .Values.service.annotations) }}
   annotations:
-{{ toYaml .Values.service.annotations | indent 4 }}
+  {{- if .Values.annotations }}
+    {{ toYaml .Values.annotations | nindent 4 }}
+  {{- end }}
+  {{- if .Values.service.annotations }}
+    {{ toYaml .Values.service.annotations | nindent 4 }}
+  {{- end }}
+{{- end }}
 spec:
   type: {{ .Values.service.type }}
   selector:
